@@ -4,8 +4,6 @@ import SimpleLightbox from 'simplelightbox';
 import 'simplelightbox/dist/simple-lightbox.min.css';
 import { getImages } from './getImages';
 import { renderCardItems } from './markup';
-import axios from 'axios';
-export const axios = require('axios');
 
 export const API_KEY = '31904814-f4bcbbfe75d97904192d1a917';
 export let page = 0;
