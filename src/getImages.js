@@ -3,7 +3,7 @@ import { page } from '.';
 import { perPage } from '.';
 import { value } from '.';
 import axios from 'axios';
-const axios = require('axios');
+export const axios = require('axios');
 
 export const getImages = async () => {
   return await axios(
