@@ -89,6 +89,6 @@ button {
 
 .info {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
+  padding-left: 15px;
+  grid-gap: 12px;
 }

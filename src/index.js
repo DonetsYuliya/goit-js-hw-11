@@ -6,15 +6,14 @@ import { getImages } from './getImages';
 import { renderCardItems } from './markup';
 
 export const API_KEY = '31904814-f4bcbbfe75d97904192d1a917';
-export let page = 0;
 export const perPage = 40;
-export let value = '';
-let totalHits = 0;
+export let page = 0;
 
 const refs = {
   form: document.querySelector('.search-form'),
   galleryContainer: document.querySelector('.gallery'),
   loadMoreBtn: document.querySelector('.load-more'),
+  inputEl: document.querySelector('input'),
 };
 
 refs.loadMoreBtn.classList.add('is-hidden');
@@ -33,27 +32,22 @@ const updatePage = (clearContainer = '') => {
 
 const onHandleSubmit = async e => {
   e.preventDefault();
-  value = await e.target.elements.searchQuery.value.trim();
+  const value = await e.target.elements.searchQuery.value.trim();
 
   if (!value) return;
   updatePage();
   page = 1;
 
-  await getImages(value)
-    .then(data => {
-      return data;
-    })
-    .then(data => {
-      totalHits = data.data.totalHits;
-      Notiflix.Notify.success(`Hooray! We found "${totalHits}" images.`);
-      return data;
-    })
-    .then(data => toShowImages(data))
-    .catch(error => {
-      Notiflix.Notify.failure(
-        'Sorry, there are no images matching your search query. Please try again.'
-      );
-    });
+  try {
+    const data = await getImages(value);
+    const totalHits = await data.data.totalHits;
+    Notiflix.Notify.success(`Hooray! We found "${totalHits}" images.`);
+    await toShowImages(data);
+  } catch (error) {
+    Notiflix.Notify.failure(
+      'Sorry, there are no images matching your search query. Please try again.'
+    );
+  }
 
   refs.loadMoreBtn.classList.remove('is-hidden');
 };
@@ -64,22 +58,21 @@ const toShowImages = async data => {
   gallery.refresh();
 };
 
-const pageCounter = () => {
-  page += 1;
-};
+const pageCounter = () => (page += 1);
 
 const onPagination = async () => {
+  const value = await refs.inputEl.value.trim();
   pageCounter();
   updatePage();
-  console.log(page);
-  await getImages(value)
-    .then(toShowImages)
-    .catch(error => {
-      Notiflix.Notify.failure(
-        "We're sorry, but you've reached the end of search results."
-      ),
-        refs.loadMoreBtn.classList.add('is-hidden');
-    });
+  try {
+    const data = await getImages(value);
+    await toShowImages(data);
+  } catch (error) {
+    Notiflix.Notify.failure(
+      "We're sorry, but you've reached the end of search results."
+    ),
+      refs.loadMoreBtn.classList.add('is-hidden');
+  }
 };
 
 refs.form.addEventListener('submit', onHandleSubmit);

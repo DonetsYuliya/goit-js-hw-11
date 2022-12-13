@@ -17,16 +17,16 @@ export const renderCardItems = data => {
     </a>
     <div class="info">
       <p class="info-item">
-        <b>likes ${likes}</b>
+        <b>Likes</b> ${likes}
       </p>
       <p class="info-item">
-        <b>views ${views}</b>
+        <b>Views</b> ${views}
       </p>
       <p class="info-item">
-        <b>comments ${comments}</b>
+        <b>Comments</b> ${comments}
       </p>
       <p class="info-item">
-        <b>downloads ${downloads}</b>
+        <b>Downloads</b> ${downloads}
       </p>
     </div>
   </div>`;
