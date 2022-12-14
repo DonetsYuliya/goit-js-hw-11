@@ -7,7 +7,7 @@ import { renderCardItems } from './markup';
 
 export const API_KEY = '31904814-f4bcbbfe75d97904192d1a917';
 export const perPage = 40;
-export let page = 0;
+export let page = 1;
 
 const refs = {
   form: document.querySelector('.search-form'),
@@ -26,7 +26,7 @@ const gallery = new SimpleLightbox('.gallery a', {
   nav: true,
 });
 
-const updatePage = (clearContainer = '') => {
+const updateList = (clearContainer = '') => {
   return (refs.galleryContainer.innerHTML = clearContainer);
 };
 
@@ -35,7 +35,7 @@ const onHandleSubmit = async e => {
   const value = await e.target.elements.searchQuery.value.trim();
 
   if (!value) return;
-  updatePage();
+  updateList();
   page = 1;
 
   try {
@@ -54,7 +54,7 @@ const onHandleSubmit = async e => {
 
 const toShowImages = async data => {
   const markup = await renderCardItems(data);
-  updatePage(markup);
+  updateList(markup);
   gallery.refresh();
 };
 
@@ -63,7 +63,7 @@ const pageCounter = () => (page += 1);
 const onPagination = async () => {
   const value = await refs.inputEl.value.trim();
   pageCounter();
-  updatePage();
+  updateList();
   try {
     const data = await getImages(value);
     await toShowImages(data);
