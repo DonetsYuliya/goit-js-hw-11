@@ -7,7 +7,7 @@ import { renderCardItems } from './markup';
 
 export const API_KEY = '31904814-f4bcbbfe75d97904192d1a917';
 export const perPage = 40;
-export let page = 0;
+let page = 1;
 
 const refs = {
   form: document.querySelector('.search-form'),
@@ -36,10 +36,10 @@ const onHandleSubmit = async e => {
 
   if (!value) return;
   updateList();
-  page = 1;
+  const page = 1;
 
   try {
-    const data = await getImages(value);
+    const data = await getImages(value, page);
     const totalHits = await data.data.totalHits;
     Notiflix.Notify.success(`Hooray! We found "${totalHits}" images.`);
     await toShowImages(data);
@@ -61,11 +61,11 @@ const toShowImages = async data => {
 const pageCounter = () => (page += 1);
 
 const onPagination = async () => {
-  const value = await refs.inputEl.value.trim();
+  const value = refs.inputEl.value.trim();
   pageCounter();
   updateList();
   try {
-    const data = await getImages(value);
+    const data = await getImages(value, page);
     await toShowImages(data);
   } catch (error) {
     Notiflix.Notify.failure(

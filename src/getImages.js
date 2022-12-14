@@ -1,11 +1,11 @@
 import { API_KEY } from '.';
 import { page } from '.';
 import { perPage } from '.';
-import { page } from '.';
+// import { page } from '.';
 import axios from 'axios';
 const axios = require('axios');
 
-export const getImages = async value => {
+export const getImages = async (value, page) => {
   try {
     const data = await axios.get(
       `https://pixabay.com/api/?key=${API_KEY}&q=${value}&image_type=photo&orientation=horizontal&safesearch=true&per_page=${perPage}&page=${page}`
