@@ -1,7 +1,5 @@
 import { API_KEY } from '.';
-import { page } from '.';
 import { perPage } from '.';
-// import { page } from '.';
 import axios from 'axios';
 const axios = require('axios');
 
