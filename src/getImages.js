@@ -1,7 +1,6 @@
 import { API_KEY } from '.';
 import { perPage } from '.';
 import axios from 'axios';
-const axios = require('axios');
 
 export const getImages = async (value, page) => {
   try {
