@@ -43,18 +43,18 @@ const onHandleSubmit = async e => {
     const totalHits = await data.data.totalHits;
     Notiflix.Notify.success(`Hooray! We found "${totalHits}" images.`);
     await toShowImages(data);
+    refs.loadMoreBtn.classList.remove('is-hidden');
   } catch (error) {
     Notiflix.Notify.failure(
       'Sorry, there are no images matching your search query. Please try again.'
     );
   }
-
-  refs.loadMoreBtn.classList.remove('is-hidden');
 };
 
 const toShowImages = async data => {
   const markup = await renderCardItems(data);
   updateList(markup);
+  smoothyScroll();
   gallery.refresh();
 };
 
@@ -77,3 +77,12 @@ const onPagination = async () => {
 
 refs.form.addEventListener('submit', onHandleSubmit);
 refs.loadMoreBtn.addEventListener('click', onPagination);
+
+const smoothyScroll = () => {
+  const { height: cardHeight } =
+    refs.galleryContainer.firstElementChild.getBoundingClientRect();
+  window.scrollBy({
+    top: cardHeight * 2,
+    behavior: 'smooth',
+  });
+};
