@@ -26,8 +26,8 @@ const gallery = new SimpleLightbox('.gallery a', {
   nav: true,
 });
 
-const updateList = (clearContainer = '') => {
-  return (refs.galleryContainer.innerHTML = clearContainer);
+const clearList = (clear = '') => {
+  return (refs.galleryContainer.innerHTML = clear);
 };
 
 const onHandleSubmit = async e => {
@@ -35,7 +35,7 @@ const onHandleSubmit = async e => {
   const value = await e.target.elements.searchQuery.value.trim();
 
   if (!value) return;
-  updateList();
+  clearList();
   const page = 1;
 
   try {
@@ -53,8 +53,7 @@ const onHandleSubmit = async e => {
 
 const toShowImages = async data => {
   const markup = await renderCardItems(data);
-  updateList(markup);
-  smoothyScroll();
+  refs.galleryContainer.insertAdjacentHTML('beforeend', markup);
   gallery.refresh();
 };
 
@@ -63,10 +62,10 @@ const pageCounter = () => (page += 1);
 const onPagination = async () => {
   const value = refs.inputEl.value.trim();
   pageCounter();
-  updateList();
   try {
     const data = await getImages(value, page);
     await toShowImages(data);
+    smoothyScroll();
   } catch (error) {
     Notiflix.Notify.failure(
       "We're sorry, but you've reached the end of search results."
