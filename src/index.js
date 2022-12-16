@@ -45,7 +45,7 @@ const onHandleSubmit = async e => {
     const totalHits = await data.data.totalHits;
     Notiflix.Notify.success(`Hooray! We found "${totalHits}" images.`);
     await toShowImages(data);
-    toShowBtn();
+    // toShowBtn();
   } catch (error) {
     Notiflix.Notify.failure(
       'Sorry, there are no images matching your search query. Please try again.'
@@ -73,8 +73,8 @@ const onPagination = async () => {
   } catch (error) {
     Notiflix.Notify.failure(
       "We're sorry, but you've reached the end of search results."
-    ),
-      toHideBtn();
+    );
+    // toHideBtn();
   }
 };
 
