@@ -16,7 +16,9 @@ const refs = {
   inputEl: document.querySelector('input'),
 };
 
-refs.loadMoreBtn.classList.add('is-hidden');
+const toHideBtn = () => refs.loadMoreBtn.classList.add('is-hidden');
+const toShowBtn = () => refs.loadMoreBtn.classList.remove('is-hidden');
+toHideBtn();
 
 const gallery = new SimpleLightbox('.gallery a', {
   sourceAttr: 'href',
@@ -43,7 +45,7 @@ const onHandleSubmit = async e => {
     const totalHits = await data.data.totalHits;
     Notiflix.Notify.success(`Hooray! We found "${totalHits}" images.`);
     await toShowImages(data);
-    refs.loadMoreBtn.classList.remove('is-hidden');
+    toShowBtn();
   } catch (error) {
     Notiflix.Notify.failure(
       'Sorry, there are no images matching your search query. Please try again.'
@@ -55,6 +57,8 @@ const toShowImages = async data => {
   const markup = await renderCardItems(data);
   refs.galleryContainer.insertAdjacentHTML('beforeend', markup);
   gallery.refresh();
+  const lastElement = refs.galleryContainer.lastElementChild;
+  observer.observe(lastElement);
 };
 
 const pageCounter = () => (page += 1);
@@ -65,23 +69,42 @@ const onPagination = async () => {
   try {
     const data = await getImages(value, page);
     await toShowImages(data);
-    smoothyScroll();
+    // smoothyScroll();
   } catch (error) {
     Notiflix.Notify.failure(
       "We're sorry, but you've reached the end of search results."
     ),
-      refs.loadMoreBtn.classList.add('is-hidden');
+      toHideBtn();
   }
 };
 
 refs.form.addEventListener('submit', onHandleSubmit);
 refs.loadMoreBtn.addEventListener('click', onPagination);
 
-const smoothyScroll = () => {
-  const { height: cardHeight } =
-    refs.galleryContainer.firstElementChild.getBoundingClientRect();
-  window.scrollBy({
-    top: cardHeight * 2,
-    behavior: 'smooth',
+// smoothyScroll /////
+
+// const smoothyScroll = () => {
+//   const { height: cardHeight } =
+//     refs.galleryContainer.firstElementChild.getBoundingClientRect();
+//   window.scrollBy({
+//     top: cardHeight * 2,
+//     behavior: 'smooth',
+//   });
+// };
+
+// scrolling is not end /////
+
+const options = {
+  root: document.querySelector('#scrollArea'),
+  rootMargin: '0px',
+  threshold: 1.0,
+};
+const callback = entries => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      console.log(entry);
+      onPagination();
+    }
   });
 };
+const observer = new IntersectionObserver(callback, options);
